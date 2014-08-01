@@ -1,103 +1,55 @@
 doctype 5
 html
   head
-    title Perico
+    title Chat node JS
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-    <script src="http://10.15.71.52:3000/socket.io/socket.io.js"></script>
+    <script src="http://10.15.71.51:3000/socket.io/socket.io.js"></script>
     script
-
-
-
-
-
-            var socket = io.connect('http://10.15.71.52:3000');
-
-
-           
+            var socket = io.connect('http://10.15.71.51:3000');         
           
             socket.on('cliente', function (data) {       
-            
               
-
-              $('#count').html("Users Online :" +data.number);
-
+              $('#count').html("Users Online :" +data.number);           
               
-              // $('#nicksUl').empty().append($('<ul>'))
-
-
-                // for (i=0;i<data.lista.length;i++){
-                  //  $('#nicksUl').append('<li>'+data.lista[i]+'<li>');
-
-
-                 //}
-
              });
 
 
 
              socket.on('nuevoMensaje',function(data){
-
               $('#conversacion').append('<p>'+'<strong>'+data.nick+':'+'</strong> ' +" "+data.nuevoMensaje+'</p>')
-
              }) ;       
 
 
 
              socket.on('usersOn',function(data){
-
-
                  $('#nicksUl').empty().append($('<ul>'))
-
-
                  for (i=0;i<data.length;i++){
                     $('#nicksUl').append($('<li>'+data[i]+'<li>'));
-
-
                  }
-
-
-
-             })  
-
+             })          
              
-             
-
-
 
              $(function(){
-
-                 $('#form1').hide();
-
-               $('#form1').submit(function(event){
-                 
-                  event.preventDefault(); 
+               $('#form1').hide();
+               $('#form1').submit(function(event){                 
+                 event.preventDefault(); 
                  var mensaje=$('#message').val();
-
                  socket.emit('mensaje',{texto:mensaje}) ;
-                 $('#message').val(' ').focus();
-
-                           
+                 $('#message').val(' ').focus();                           
                });
-
-
-
 
                 $('#set-nickname').submit(function(event){
               
-                  event.preventDefault();
+                 event.preventDefault();
                  var nick=$('#nick').val();
                   
                  socket.emit('nickName',nick,function(data){
                    
-                   if (data){
-                      
+                   if (data){              
                     
                        $('#set-nickname').hide();
-                           $('#form1').show();
-
-                     
-                   }else{
-                    
+                       $('#form1').show();                     
+                   }else{                 
 
                     $('#set-nickname').prepend('<p>'+'NickName en uso'+'</p>');
                    }
@@ -109,18 +61,10 @@ html
                          
                });
             
-             });     
-                        
-            
-
-           
-
-
-            
-
-                
-
-           
+             });                   
+         
+               
+          
   body
     block content
      

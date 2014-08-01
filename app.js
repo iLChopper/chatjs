@@ -20,11 +20,6 @@ app.get('/chat',user.chat);
 
 
 
-
-
-
-
-
   io.sockets.on('connection', function (socket) {
 
 
@@ -32,7 +27,7 @@ app.get('/chat',user.chat);
   	console.log('Usuario Conectado')
     io.sockets.emit('cliente', { 
 
-    	number:counter,
+    	  number:counter,
         lista:nickNames
 
     })
@@ -57,40 +52,24 @@ app.get('/chat',user.chat);
     socket.on('mensaje',function(data){   
 
     	io.sockets.emit('nuevoMensaje',{
-
-
     		nuevoMensaje:data.texto,
     		nick:socket.nickName
-
-
-
     	});
     
     
 
     })
 
-
-
-
-
-
-
-
-    socket.on('nickName',function(data,callback){
+    socket.on('nickName',function(data,callback){       
        
-       console.log(data);
        if (nickNames.indexOf(data)!=-1){
          
        	 callback(false)
 
-       } else{
-
-        console.log(data);
-    	nickNames.push(data);
-    	socket.nickName=data;      
-    	console.log(nickNames);
-    	callback(true) 
+       } else{      
+    	   nickNames.push(data);
+    	   socket.nickName=data;  
+      	 callback(true)
 
         }
 
