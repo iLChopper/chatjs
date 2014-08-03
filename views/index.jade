@@ -1,28 +1,34 @@
-extends layout
+extends layout2
+
 
 block content
-  h1 ChaTeala
-
-  p(id="count")  
-
-    
-   form(id='set-nickname',action='#')
-    label NickName
-    input(id="nick")
-    input(type='submit',value='Guardar')   
-
-
-  form(id='form1',action='#')
-   label Mensaje
-   input(id='message')
-   input(type='submit') 
-
-
-   div(id="conversacion")
-
-   div(id="nicksUl")
  
+
+  div(id="contenedor", class="container")
+    div(class="row")    
+       
+      div(class="col-lg-6 col-lg-offset-3 text-center")
+       h1(class="jumbotron") Chat Nube 3D
+
       
+       form(id='set-nickname',action='#' class="form-inline")
+          label(class="control-label") NickName           
+          input(id="nick" class="form-control " autofocus="autofocus")
+          input(type='submit' class="btn btn-primary " value='Guardar' )   
+
+       div(id="conversacion")
+        div(id="usuarios" class="well")         
+         p(id="count")
+         ul(id="listaDeNicks")
+        div(id="dialogo" class="well")
+        form(id='form1',action='#' class="form-inline")         
+          input(id='message'  placeholder="Escribe un mensaje" class="form-control" )
+          input(type='submit' class="btn btn-primary") 
+
+
+        
+
+        
 
 
 

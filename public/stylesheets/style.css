@@ -1,8 +1,27 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+style 
+.centered{
+   float: none;
+   margin: 0 auto;   
 }
 
-a {
-  color: #00B7FF;
+#dialogo{
+	overflow:auto;
+	border:1px solid #CCC;
+	height: 400px;
+	width: 400px;	
+	text-align: left; 
+	float: right;
+	
+}
+#usuarios{
+	border:1px solid #CCC;
+	height: 400px;
+	width: 150px;
+	float: left;
+	text-align: left; 
+	overflow:auto;
+}
+
+#message{
+	min-width: 350px;
 }

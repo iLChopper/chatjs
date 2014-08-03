@@ -1,0 +1,65 @@
+
+doctype html
+html
+	head
+		title Chat on Nube 3D
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+		<script src="http://192.168.5.101:3000/socket.io/socket.io.js"></script>	
+		<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+		
+		
+		script(type="text/javascript").
+			var socket = io.connect('http://192.168.5.101:3000');
+			socket.on('cliente', function (data){
+				$('#count').html("Users Online :" +data.number);
+				
+				 if (data.listaNicks !=null)  { //Si los nicks no son nulos , es que vienes desde el desconectar				 	
+				 	$("#listaDeNicks").empty();		 	
+				 	jQuery.each(data.listaNicks ,function (i,val){		
+						$("#listaDeNicks").append($("<li></li>").html(val));
+					});
+				 }
+			
+			})
+			socket.on('nuevoMensaje',function(data){				
+				$('#dialogo').append('<p>'+'<strong>'+data.nick+':'+'</strong>'+"  "+data.nuevoMensaje+'</p>');
+			})
+
+			socket.on('listaNicks',function(data){	
+				$("#listaDeNicks").empty();
+			jQuery.each(data.listaNicks ,function (i,val){		
+				$("#listaDeNicks").append($("<li></li>").html(val));
+				});
+			});
+			
+			$(function(){
+				$('#conversacion').hide();
+				$('#conversacion').submit(function(event){
+					var mensaje=$('#message').val();
+					socket.emit('mensaje',{texto:mensaje});
+					$('#message').val(' ').focus();
+				});
+
+				$('#set-nickname').submit(function(event){
+					event.preventDefault();
+					var nick=$('#nick').val();
+					socket.emit('nickName',nick,function(data){
+						if (data){							 
+							$('#set-nickname').hide();
+							$('#conversacion').show();
+						}else{
+							$('#set-nickname').prepend('<p>'+'NickName en uso'+'</p>');
+						}
+					});	
+				});
+
+				
+
+			});	
+
+		
+
+				
+	body
+		block content 	

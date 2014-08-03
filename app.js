@@ -1,5 +1,6 @@
 var port=process.env.PORT || 3000;
-var express=require('express'),   
+var express=require('express'),
+   path = require('path'),   
    app = express()
   , http = require('http')
   , server = http.createServer(app)
@@ -16,6 +17,7 @@ app.set('views',__dirname + '/views');
 app.set('view engine','jade');
 app.get('/',routes.index);
 app.get('/chat',user.chat);
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 
@@ -25,17 +27,12 @@ app.get('/chat',user.chat);
 
   	counter++;
   	console.log('Usuario Conectado')
-    io.sockets.emit('cliente', { 
-
-    	  number:counter,
-        lista:nickNames
-
-    })
+    io.sockets.emit('cliente', {number:counter})
  
     socket.on('disconnect',function(req,res){
         counter--;
  	    console.log('Usuario Desconectado , en este momento hay online :%d',counter)
-    	socket.broadcast.emit('cliente',{number:counter})
+    	
 
     	if(!socket.nickName) return;
 
@@ -45,6 +42,7 @@ app.get('/chat',user.chat);
              console.log(nickNames)
 
     	}
+      socket.broadcast.emit('cliente',{number:counter,listaNicks:nickNames})
 
     })
 
@@ -62,18 +60,22 @@ app.get('/chat',user.chat);
 
     socket.on('nickName',function(data,callback){       
        
-       if (nickNames.indexOf(data)!=-1){
-         
+       if (nickNames.indexOf(data)!=-1){         
        	 callback(false)
 
-       } else{      
+       } else{             
     	   nickNames.push(data);
-    	   socket.nickName=data;  
+    	   socket.nickName=data;
+         //Cuando seteo el nickname, actualizo la lista de users
+         io.sockets.emit('listaNicks',{
+            listaNicks:nickNames
+         });           
       	 callback(true)
-
         }
 
     })
+
+    
 
 });
 
