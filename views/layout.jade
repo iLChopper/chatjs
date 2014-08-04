@@ -1,70 +1,70 @@
-doctype 5
+
+doctype html
 html
-  head
-    title Chat node JS
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-    <script src="http://10.15.71.51:3000/socket.io/socket.io.js"></script>
-    script
-            var socket = io.connect('http://10.15.71.51:3000');         
-          
-            socket.on('cliente', function (data) {       
-              
-              $('#count').html("Users Online :" +data.number);           
-              
-             });
+	head
+		title Chat on Nube 3D
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+		<script src="http://localhost:3000/socket.io/socket.io.js"></script>	
+		<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+		
+		
+		script(type="text/javascript").
+			var	socket=io.connect('http://localhost:3000');
+			socket.on('cliente',	function	(data){	
+				$('#count').html("Users Online :" +data.number); //Actualiza el counter de users
+				
+				//Si un user se desconecta, actualizo la lista de nicks
+				if (data.listaNicks !=null)	{			 	
+					actualizarNicks(data);
+				}
+			
+			})
+			//Event espera a que el server avise que hay un nuevo mensaje
+			socket.on('nuevoMensaje',function(data){				
+				$('#dialogo').append('<p>'+'<strong>'+data.nick+':'+'</strong>'+"  "+data.nuevoMensaje+'</p>');
+			})
+			//Actualizo lista de nicks  
+			socket.on('listaNicks',function(data){	
+				actualizarNicks(data);
+			});
+			
+			$(function(){
+				$('#conversacion').hide();
+				$('#conversacion').submit(function(event){
+					var mensaje=$('#message').val();
+					//Envio mensaje al server 
+					socket.emit('mensaje',{texto:mensaje});
+					$('#message').val(' ').focus();
+				});
 
+				$('#set-nickname').submit(function(event){
+					event.preventDefault();
+					var nick=$('#nick').val();
+					//Envio nickname al server
+					socket.emit('nickName',nick,function(data){
+						if (data){							 
+							$('#set-nickname').hide();
+							$('#conversacion').show();
+						}else{
+							$('#set-nickname').prepend('<p>'+'NickName en uso'+'</p>');
+						}
+					});	
+				});
 
+				
 
-             socket.on('nuevoMensaje',function(data){
-              $('#conversacion').append('<p>'+'<strong>'+data.nick+':'+'</strong> ' +" "+data.nuevoMensaje+'</p>')
-             }) ;       
+			});	
 
+			function actualizarNicks(data){
+				$("#listaDeNicks").empty();
+				jQuery.each(data.listaNicks ,function (i,val){		
+					$("#listaDeNicks").append($("<li></li>").html(val));
+				});
+			};
 
+		
 
-             socket.on('usersOn',function(data){
-                 $('#nicksUl').empty().append($('<ul>'))
-                 for (i=0;i<data.length;i++){
-                    $('#nicksUl').append($('<li>'+data[i]+'<li>'));
-                 }
-             })          
-             
-
-             $(function(){
-               $('#form1').hide();
-               $('#form1').submit(function(event){                 
-                 event.preventDefault(); 
-                 var mensaje=$('#message').val();
-                 socket.emit('mensaje',{texto:mensaje}) ;
-                 $('#message').val(' ').focus();                           
-               });
-
-                $('#set-nickname').submit(function(event){
-              
-                 event.preventDefault();
-                 var nick=$('#nick').val();
-                  
-                 socket.emit('nickName',nick,function(data){
-                   
-                   if (data){              
-                    
-                       $('#set-nickname').hide();
-                       $('#form1').show();                     
-                   }else{                 
-
-                    $('#set-nickname').prepend('<p>'+'NickName en uso'+'</p>');
-                   }
-                    
-                    
-                 });
-                
-
-                         
-               });
-            
-             });                   
-         
-               
-          
-  body
-    block content
-     
+				
+	body
+		block content 	
