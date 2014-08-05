@@ -5,8 +5,8 @@ var express=require('express'),
    app = express()
   , http = require('http')
   , server = http.createServer(app)
-  , io = require('socket.io').listen(server),
-   routes=require('./routes');
+  , io = require('socket.io').listen(server);
+   
 
    nickNames=[]; //Lista para guardar la lista de nicks
 
@@ -16,7 +16,9 @@ var counter=0; //Numeros de usuarios en un momento dado en el chat.
 
 app.set('views',__dirname + '/views'); //ruta donde se encuentras las vistas
 app.set('view engine','jade'); //Utilizo jade como motor de vista
-app.get('/',routes.index); // Muestro el index.jade
+app.get('/',function(req,res){ // Muestro el index.jade
+     res.render('index');
+});
 
 //Ruta de archivos estaticos
 app.use(express.static(path.join(__dirname, 'public')));
